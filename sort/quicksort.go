@@ -1,36 +1,43 @@
 package sort
 
-func QuickSort(arr []int) []int {
-	newArr := make([]int, len(arr))
-	for i, v := range arr {
-		newArr[i] = v
-	}
-	recursiveSort(newArr, 0, len(newArr)-1)
-	return newArr
-}
-
-func recursiveSort(arr []int, start, end int) {
-	if end <= start {
-		return
+func quickSort(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
 	}
 
-	pivot := arr[end]
-	splitIndex := start
+	// 定位基准值(以最后一个元素为基准)
+	//var (
+	//	pivot    = arr[len(arr)-1] // 选择最后一个元素作为基准值
+	//	leftArr  []int
+	//	rightArr []int
+	//)
+	//for _, num := range arr[:len(arr)-1] {
+	//	if num < pivot {
+	//		leftArr = append(leftArr, num)
+	//	} else {
+	//		rightArr = append(rightArr, num)
+	//	}
+	//}
 
-	for i := start; i < end; i++ {
-		if arr[i] < pivot {
-			if splitIndex != i {
-				temp := arr[splitIndex]
-				arr[splitIndex] = arr[i]
-				arr[i] = temp
-			}
-			splitIndex++
+	// 定位基准值(以第一个元素为基准)
+	var (
+		pivot    = arr[0] // 选择第一个元素作为基准值
+		leftArr  []int
+		rightArr []int
+	)
+	for i := 1; i <= len(arr)-1; i++ {
+		var num = arr[i]
+		if num < pivot {
+			leftArr = append(leftArr, num)
+		} else {
+			rightArr = append(rightArr, num)
 		}
 	}
 
-	arr[end] = arr[splitIndex]
-	arr[splitIndex] = pivot
+	// 分治
+	leftArr = quickSort(leftArr)
+	rightArr = quickSort(rightArr)
 
-	recursiveSort(arr, start, splitIndex-1)
-	recursiveSort(arr, splitIndex+1, end)
+	// 合并
+	return append(append(leftArr, pivot), rightArr...)
 }
